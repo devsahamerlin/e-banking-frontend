@@ -1,4 +1,29 @@
-# EBankingFrontend
+# E-Banking Frontend
+
+## Besoins
+On souhaite créer une application qui permet de gérer des comptes bancaires. chaque compte appartient à un client. un compte peut subir plusieurs opérations de type DEBIT ou CREDIT. Il existe deux types de comptes : Comptes courants et comptes épargnes.
+
+Backend: https://github.com/devsahamerlin/e-banking-backend
+
+## Rendu IHM Operations sur un compte
+
+![account-search-form](images/account-search-form.png)
+
+## Rendu IHM ajout d'un client
+
+![add-customer](images/add-customer.png)
+
+## Rendu IHM recherche d'un client
+
+![search-customers](images/search-customers.png)
+
+## Liste des clients
+
+![customer-list](images/customer-list.png)
+
+## Liste des compte d'un client
+
+![customer-accounts](images/customer-accounts.png)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 
@@ -7,6 +32,8 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 To start a local development server, run:
 
 ```bash
+npm install chart.js ng2-charts --save
+npm install @types/chart.js --save-dev
 ng serve
 ```
 

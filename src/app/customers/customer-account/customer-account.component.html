@@ -1,0 +1,145 @@
+<div class="min h-screen bg-gray-50 dark:bg-gray-900 pt-16">
+  <div class="max-w-6xl mx-auto p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Customer Accounts</h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">ID: {{customerId}}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Name: {{customer.name}}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Email: {{customer.email}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+       @if (accountsObservable | async; as accounts) {
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+            @for (account of accounts; track account.id) {
+              <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
+                <!-- Account Header -->
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    @if (account.type === 'CurrentAccount') {
+                      <div class="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z"/>
+                        </svg>
+                      </div>
+                    } @else if (account.type === 'SavingAccount') {
+                      <div class="flex items-center justify-center w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                        </svg>
+                      </div>
+                    }
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        @if (account.type === 'CurrentAccount') {
+                          Current Account
+                        } @else if (account.type === 'SavingAccount') {
+                          Saving Account
+                        } 
+                      </h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">{{ account.id }}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="text-right">
+                    <span [class]="'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' + getStatusColor(account.status)">
+                      {{ account.status }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Account Details -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Balance:</span>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ formatCurrency(account.balance) }}</p>
+                  </div>
+                  <div>
+                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Created:</span>
+                    <p class="text-sm text-gray-900 dark:text-white">{{ account.createdAt | formatDate }}</p>
+                  </div>
+                </div>
+
+                <!-- Account Type Specific Details -->
+                @if (account.type === 'CurrentAccount') {
+                  <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-4 dark:bg-gray-900">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                      </svg>
+                      <span class="text-sm font-medium text-blue-800 dark:text-blue-200">Current Account Features</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <span class="text-xs text-blue-600 dark:text-blue-400">Overdraft Limit:</span>
+                        <p class="text-sm font-semibold text-blue-800 dark:text-blue-200">{{ formatCurrency(account.overdraft) }}</p>
+                      </div>
+                      <div>
+                        <span class="text-xs text-blue-600 dark:text-blue-400">Available Credit:</span>
+                        <p class="text-sm font-semibold text-blue-800 dark:text-blue-200">{{ formatCurrency(account.balance + account.overdraft) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                } @else if (account.type === 'SavingAccount') {
+                  <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 mb-4 dark:bg-gray-900">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5T10.5 4.5T9 6v5.5m0 0v.5M9 11.5L9 12"/>
+                      </svg>
+                      <span class="text-sm font-medium text-green-800 dark:text-green-200">Saving Account Features</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <span class="text-xs text-green-600 dark:text-green-400">Interest Rate:</span>
+                        <p class="text-sm font-semibold text-green-800 dark:text-green-200">{{ account.interestRate }}%</p>
+                      </div>
+                      <div>
+                        <span class="text-xs text-green-600 dark:text-green-400">Monthly Interest:</span>
+                        <p class="text-sm font-semibold text-green-800 dark:text-green-200">{{ formatCurrency(calculateMonthlyInterest(account.balance, account.interestRate)) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="flex space-x-3 mt-4">
+                  <button 
+                    (click)="manageAccount(account.id)"
+                    class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                    Manage Account
+                  </button>
+                  <button 
+                    (click)="accountOperations(account.id)"
+                    class="flex-1 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                    Manage Operations
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (isLoading) {
+          <div class="text-center py-12">
+            <svg class="animate-spin w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-500 dark:text-gray-400">Loading accounts...</p>
+          </div>
+        } @else {
+          <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="text-gray-500 dark:text-gray-400 text-lg font-medium">No Accounts Found</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm mt-2">This customer doesn't have any accounts yet.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
