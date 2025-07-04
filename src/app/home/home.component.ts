@@ -145,29 +145,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       title: 'Total Balance',
       amount: '$24,847.92',
-      change: '+12.5%',
       changeClass: 'text-green-600 dark:text-green-400',
-      trend: 'up',
       icon: '<svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>',
       iconBg: 'bg-green-100 dark:bg-green-900',
       iconColor: 'text-green-600 dark:text-green-400'
     },
     {
-      title: 'Monthly Income',
+      title: 'Total Income',
       amount: '$8,420.00',
-      change: '+8.2%',
       changeClass: 'text-green-600 dark:text-green-400',
-      trend: 'up',
       icon: '<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>',
       iconBg: 'bg-blue-100 dark:bg-blue-900',
       iconColor: 'text-blue-600 dark:text-blue-400'
     },
     {
-      title: 'Monthly Expenses',
+      title: 'Total Expenses',
       amount: '$4,247.85',
-      change: '-15.3%',
       changeClass: 'text-green-600 dark:text-green-400',
-      trend: 'down',
       icon: '<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>',
       iconBg: 'bg-red-100 dark:bg-red-900',
       iconColor: 'text-red-600 dark:text-red-400'
@@ -178,7 +172,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       description: 'Amazon Purchase',
       date: 'Dec 28',
-      category: 'Shopping',
+      category: 'debit',
       amount: '-$89.99',
       status: 'Completed',
       amountClass: 'text-red-600 dark:text-red-400',
@@ -189,7 +183,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       description: 'Salary Deposit',
       date: 'Dec 25',
-      category: 'Income',
+      category: 'credit',
       amount: '+$4,200.00',
       status: 'Completed',
       amountClass: 'text-green-600 dark:text-green-400',
@@ -200,7 +194,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       description: 'Netflix Subscription',
       date: 'Dec 24',
-      category: 'Entertainment',
+      category: 'debit',
       amount: '-$15.99',
       status: 'Completed',
       amountClass: 'text-red-600 dark:text-red-400',
@@ -211,7 +205,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       description: 'Gas Station',
       date: 'Dec 23',
-      category: 'Transportation',
+      category: 'debit',
       amount: '-$52.40',
       status: 'Completed',
       amountClass: 'text-red-600 dark:text-red-400',

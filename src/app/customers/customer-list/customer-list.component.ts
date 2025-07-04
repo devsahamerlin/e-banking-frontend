@@ -5,6 +5,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { Customer } from '../../common/models/customer.model';
 import { CustomersService } from '../../services/customers.service';
 import { CommonModule } from '@angular/common';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -17,7 +18,10 @@ export class CustomerListComponent {
   errorMessage!: string;
   searchFormGroup : FormGroup | undefined;
   
-  constructor(private customerService : CustomersService, private fb : FormBuilder, private router : Router) { }
+  constructor(private customerService : CustomersService, 
+    private fb : FormBuilder, 
+    private router : Router,
+   private snackBar: SnackBarService) { }
 
   ngOnInit(): void {
     this.searchFormGroup=this.fb.group({
@@ -28,9 +32,10 @@ export class CustomerListComponent {
 
    allCustomers() {
     let kw=this.searchFormGroup?.value.keyword;
-    this.customers=this.customerService.customers().pipe(
+    this.customers=this.customerService.getCustomers().pipe(
       catchError(err => {
         this.errorMessage=err.message;
+        this.snackBar.openSnackBar("Error fetching customers: " + this.errorMessage);
         return throwError(err);
       })
     );
@@ -41,6 +46,7 @@ export class CustomerListComponent {
     this.customers=this.customerService.searchCustomers(kw).pipe(
       catchError(err => {
         this.errorMessage=err.message;
+        this.snackBar.openSnackBar("Error searching customers: " + this.errorMessage);
         return throwError(err);
       })
     );
@@ -55,11 +61,13 @@ export class CustomerListComponent {
           map(data=>{
             let index=data.indexOf(c);
             data.slice(index,1)
+            this.snackBar.openSnackBar("Customer deleted successfully!");
             return data;
           })
         );
       },
       error : err => {
+        this.snackBar.openSnackBar("Error deleting customer: " + err.message);
         console.log(err);
       }
     })

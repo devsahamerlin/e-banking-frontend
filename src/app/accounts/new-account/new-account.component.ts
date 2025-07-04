@@ -30,7 +30,6 @@ export class NewAccountComponent {
   setAccountType(type: 'CURRENT' | 'SAVING') {
     this.newAccountFormGroup.patchValue({ type });
     
-    // Update validators based on account type
     if (type === 'CURRENT') {
       this.newAccountFormGroup.get('overdraft')?.setValidators([Validators.required, Validators.min(0)]);
       this.newAccountFormGroup.get('interestRate')?.clearValidators();

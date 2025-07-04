@@ -1,8 +1,9 @@
-import { ThemeService } from '../../../services/theme.service';
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserProfile } from '../../models/user-profile';
-import { RouterModule } from '@angular/router';
+import { UserProfile } from '../../models/user-profile.model';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { SnackBarService } from '../../../services/snack-bar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,10 +18,11 @@ export class NavbarComponent implements OnInit {
   showUserMenu = false;
   currentTime = new Date();
   isCollapsed = false;
+  isAuthenticated = false;
   
   userProfile: UserProfile = {
     lastName: 'Merlin',
-    email: 'admin@ebanking.com',
+    username: 'admin@ebanking.com',
     password: '12345',
     avatar: 'SM',
     role: 'Admin',
@@ -34,14 +36,16 @@ export class NavbarComponent implements OnInit {
       label: 'New Account',
       icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6',
       route: '/accounts/new',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      requiredRole: 'ADMIN'
     },
     {
       id: 'new-customer',
       label: 'New Customer',
       icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z',
       route: '/customers/new',
-      color: 'bg-green-500'
+      color: 'bg-green-500',
+      requiredRole: 'ADMIN'
     },
     {
       id: 'accounts',
@@ -52,7 +56,13 @@ export class NavbarComponent implements OnInit {
     }
   ];
 
+  constructor(public authService: AuthService,
+    private snackBar: SnackBarService,
+    private router: Router
+   ) {}
+
   ngOnInit(): void {
+    this.isAuthenticated = this.authService.isAuthenticated;
     this.updateTime();
     setInterval(() => {
       this.updateTime();
@@ -96,8 +106,9 @@ export class NavbarComponent implements OnInit {
   }
 
 
-  logout(): void {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+  handleLogout(): void {
+    this.authService.logout();
+    this.snackBar.openSnackBar("You have been logged out successfully.");
+    this.router.navigateByUrl("/auth/login");
   }
 }

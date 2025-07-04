@@ -11,14 +11,11 @@ export class CustomersService {
 
   constructor(private http:HttpClient) { }
 
-  public getCustomers():Observable<Array<Customer>>{
-    return this.http.get<Array<Customer>>(environment.backendHost+"/customers")
-  }
   public searchCustomers(keyword : string):Observable<Array<Customer>>{
     return this.http.get<Array<Customer>>(environment.backendHost+"/customers/search?keyword="+keyword)
   }
 
-  public customers():Observable<Array<Customer>>{
+  public getCustomers():Observable<Array<Customer>>{
     return this.http.get<Array<Customer>>(environment.backendHost+"/customers")
   }
 

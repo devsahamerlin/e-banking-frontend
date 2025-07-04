@@ -25,6 +25,16 @@ Backend: https://github.com/devsahamerlin/e-banking-backend
 
 ![customer-accounts](images/customer-accounts.png)
 
+## Authentication and Authorization using GUARD and Interceptor
+
+### Login Page
+
+### ROLE_USER (can't add: new account. new customer, view operations form)
+
+### For Not Authorized users
+
+### ROLE_ADMIN (can add: new account. new customer, view operations form)
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 
 ## Development server
