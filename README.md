@@ -5,6 +5,8 @@ On souhaite créer une application qui permet de gérer des comptes bancaires. c
 
 Backend: https://github.com/devsahamerlin/e-banking-backend
 
+![app](images/app.gif)
+
 ## Rendu IHM Operations sur un compte
 
 ![account-search-form](images/account-search-form.png)
@@ -29,11 +31,27 @@ Backend: https://github.com/devsahamerlin/e-banking-backend
 
 ### Login Page
 
-### ROLE_USER (can't add: new account. new customer, view operations form)
+![login](images/login.png)
 
-### For Not Authorized users
+### ROLE_USER can't access operations form, and can't access new account or new customer page 
+
+This view is when customer click on `operations button` from specific customer accounts list
+
+![users-operations](images/users-operations.png)
+
+![user-menu](images/user-menu.png)
+
+### Redirect to Not Authorized page when users try to access new-customer or new-account page
+
+![not-authorized](images/not-authorized.png)
 
 ### ROLE_ADMIN (can add: new account. new customer, view operations form)
+
+This view is when customer click on `operations button` from specific customer accounts list
+
+![admin-operations](images/admin-operations.png)
+
+![admin-menu](images/admin-menu.png)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 
