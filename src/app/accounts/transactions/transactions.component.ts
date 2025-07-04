@@ -7,6 +7,7 @@ import { AccountsService } from '../../services/accounts.service';
 import { SnackBarService } from '../../services/snack-bar.service';
 import { FormatDatePipe } from "../../common/pipe/date-array.pipe";
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-transactions',
@@ -16,6 +17,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent implements OnInit {
+  
+  requiredRole: string = 'ADMIN';
 
   accountFormGroup! : FormGroup;
   currentPage : number =0;
@@ -28,6 +31,7 @@ export class TransactionsComponent implements OnInit {
   
 
   constructor(private fb : FormBuilder, private accountService : AccountsService,
+    public authService: AuthService,
     private snackBar: SnackBarService,
     private route : ActivatedRoute
   ) { }

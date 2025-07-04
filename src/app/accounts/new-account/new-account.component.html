@@ -8,7 +8,7 @@
       <div class="p-6">
         <form [formGroup]="newAccountFormGroup" (ngSubmit)="handleSaveAccount()">
           <div class="space-y-6">
-            <!-- Customer ID Field -->
+       
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Customer ID :
@@ -29,7 +29,7 @@
               }
             </div>
 
-            <!-- Account Type Selection -->
+
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Account Type :
@@ -59,7 +59,6 @@
               </div>
             </div>
 
-            <!-- Initial Balance -->
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Initial Balance :
@@ -91,7 +90,6 @@
               }
             </div>
 
-            <!-- Account Status -->
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Account Status :
@@ -116,7 +114,6 @@
               }
             </div>
 
-            <!-- Overdraft Field (Only for Current Account) -->
             @if (newAccountFormGroup.get('type')?.value === 'CURRENT') {
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -150,7 +147,6 @@
               </div>
             }
 
-            <!-- Interest Rate Field (Only for Saving Account) -->
             @if (newAccountFormGroup.get('type')?.value === 'SAVING') {
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">

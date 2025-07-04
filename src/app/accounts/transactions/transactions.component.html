@@ -10,7 +10,6 @@
             </div>
             
             <div class="p-6">
-              <!-- Account Search Form -->
               <div class="mb-6">
                 <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccount()">
                   <div class="flex space-x-3">
@@ -39,7 +38,6 @@
                 </form>
               </div>
 
-              <!-- Account Search Results -->
               @if (accountObservable | async; as accountDetails) {
                 <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
                   <div class="mb-3">
@@ -127,110 +125,110 @@
             </div>
           </div>
         
-          <!-- Operations form -->
           @if (accountObservable | async; as accountDetails) {
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
               <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Operations</h2>
               </div>
-              
-              <div class="p-6">
-                <form [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()">
-                  <div class="mb-6">
-                    <div class="flex space-x-3">
-                      <button
-                        type="button"
-                        (click)="setOperationType('DEBIT')"
-                        [class]="getOperationButtonClass('DEBIT')"
-                        class="flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                        </svg>
-                        <span>DEBIT</span>
-                      </button>
-                      
-                      <button
-                        type="button"
-                        (click)="setOperationType('CREDIT')"
-                        [class]="getOperationButtonClass('CREDIT')"
-                        class="flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                        </svg>
-                        <span>CREDIT</span>
-                      </button>
-                      
-                      <button
-                        type="button"
-                        (click)="setOperationType('TRANSFER')"
-                        [class]="getOperationButtonClass('TRANSFER')"
-                        class="flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                        </svg>
-                        <span>TRANSFER</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="space-y-6">
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                        Amount :
-                      </label>
-                      <input
-                        type="number"
-                        formControlName="amount"
-                        min="0"
-                        step="0.01"
-                        placeholder="0"
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+               @if (authService.roles.includes(requiredRole)) {
+                <div class="p-6">
+                  <form [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()">
+                    <div class="mb-6">
+                      <div class="flex space-x-3">
+                        <button
+                          type="button"
+                          (click)="setOperationType('DEBIT')"
+                          [class]="getOperationButtonClass('DEBIT')"
+                          class="flex items-center space-x-2">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                          </svg>
+                          <span>DEBIT</span>
+                        </button>
+                        
+                        <button
+                          type="button"
+                          (click)="setOperationType('CREDIT')"
+                          [class]="getOperationButtonClass('CREDIT')"
+                          class="flex items-center space-x-2">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                          </svg>
+                          <span>CREDIT</span>
+                        </button>
+                        
+                        <button
+                          type="button"
+                          (click)="setOperationType('TRANSFER')"
+                          [class]="getOperationButtonClass('TRANSFER')"
+                          class="flex items-center space-x-2">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                          </svg>
+                          <span>TRANSFER</span>
+                        </button>
+                      </div>
                     </div>
 
-                    @if (operationFormGroup.get('operationType')?.value === 'TRANSFER') {
+                    <div class="space-y-6">
                       <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                          Destination Account ID :
+                          Amount :
                         </label>
                         <input
-                          type="text"
-                          formControlName="destinationAccountId"
-                          placeholder="Enter destination account ID"
+                          type="number"
+                          formControlName="amount"
+                          min="0"
+                          step="0.01"
+                          placeholder="0"
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
                       </div>
-                    }
 
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                        Description :
-                      </label>
-                      <textarea
-                        formControlName="description"
-                        rows="4"
-                        placeholder="Enter operation description (optional)"
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none">
-                      </textarea>
-                    </div>
-
-                    <button
-                      type="submit"
-                      [disabled]="operationFormGroup.invalid || isLoading"
-                      class="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
-                      @if (isLoading) {
-                        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      } @else {
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
+                      @if (operationFormGroup.get('operationType')?.value === 'TRANSFER') {
+                        <div>
+                          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                            Destination Account ID :
+                          </label>
+                          <input
+                            type="text"
+                            formControlName="destinationAccountId"
+                            placeholder="Enter destination account ID"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+                        </div>
                       }
-                      <span>Save Operation</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                          Description :
+                        </label>
+                        <textarea
+                          formControlName="description"
+                          rows="4"
+                          placeholder="Enter operation description (optional)"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none">
+                        </textarea>
+                      </div>
+
+                      <button
+                        type="submit"
+                        [disabled]="operationFormGroup.invalid || isLoading"
+                        class="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+                        @if (isLoading) {
+                          <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        } @else {
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        }
+                        <span>Save Operation</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              }
             </div>
           }
         </div>
