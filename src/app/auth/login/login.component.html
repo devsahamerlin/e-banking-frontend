@@ -15,7 +15,7 @@
               <input
                 type="email"
                 formControlName="username"
-                placeholder="Enter customer username"
+                placeholder="Enter username"
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
               @if (loginFormGroup.get('username')?.touched && 
                    loginFormGroup.get('username')?.errors?.['username']) {
@@ -46,6 +46,7 @@
                 </span>
               }
             </div>
+            <a href="#" class="text-xs text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-100 font-bold transition-colors underline">Forgot Password?</a>
             <button
               type="submit"
               [disabled]="!loginFormGroup.valid || isLoading"
@@ -64,6 +65,19 @@
             </button>
           </div>
         </form>
+        <br>
+        <div class="text-center">
+          <p class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Don't have an account with us yet?</p>
+          <button
+            type="button"
+            (click)="navigateToSignup()"
+            class="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold text-sm transition-colors group">
+            <span>Sign Up</span>
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

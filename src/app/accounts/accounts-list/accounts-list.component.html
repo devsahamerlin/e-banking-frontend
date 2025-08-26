@@ -1,14 +1,14 @@
 <div class="min h-screen bg-gray-50 dark:bg-gray-900 pt-16">
-  @if (customers | async; as listCustomers) {
+  @if (accounts | async; as listAccounts) {
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
 
       <div class="p-6 border-b border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Customers</h2>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Accounts</h2>
         </div>
         
         @if (searchFormGroup) {
-          <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+          <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchAccounts()">
             <div class="flex space-x-3">
               <div class="flex-1 relative">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -43,13 +43,19 @@
                 ID
               </th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Name
+                Type
               </th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Email
+                Balance
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Customer
               </th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Create By
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Status
               </th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Actions
@@ -57,11 +63,11 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            @for (customer of listCustomers; track customer.id) {
+            @for (account of listAccounts; track account.id) {
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{customer.id}}
+                    {{account.id}}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -75,37 +81,78 @@
                     </div>
                     <div class="ml-4">
                       <div class="text-sm font-medium text-gray-900 dark:text-white">
-                        {{customer.name}}
+                        {{account.type}}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900 dark:text-white">{{customer.email}}</div>
+                  <div class="text-sm text-gray-900 dark:text-white">{{account.balance}}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap" (click)="handleCustomerAccounts(account.customerDTO)">
+                  <div class="text-sm text-gray-900 dark:text-white">{{account.customerDTO.name}}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900 dark:text-white">{{customer.createdBy.firstName}} {{customer.createdBy.lastName}}</div>
+                  <div class="text-sm text-gray-900 dark:text-white">{{account.createdBy.firstName}} {{account.createdBy.lastName}}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [ngClass]="getStatusColor(account.status)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize">
+                    {{ account.status }}
+                  </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div class="flex space-x-3">
-                    <button 
-                      (click)="handleCustomerAccounts(customer)" 
-                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                      </svg>
-                      Accounts
-                    </button>
-                    <button 
-                      (click)="handleDeleteCustomer(customer)" 
-                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                      </svg>
-                      Delete
-                    </button>
+
+                    <!-- Activate Button -->
+                    @if (account.status !== 'ACTIVE' && account.status !== 'CLOSED' && account.status !== 'BLOCKED') {
+                      <button 
+                        (click)="updateAccountStatus(account, 'ACTIVATED')" 
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                        </svg>
+                        Activate
+                      </button>
+                    }
+                    
+                    <!-- Suspend Button -->
+                    @if (account.status === 'ACTIVE' || account.status === 'CREATED') {
+                      <button 
+                        (click)="updateAccountStatus(account, 'SUSPENDED')" 
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                        </svg>
+                        Suspend
+                      </button>
+                    }
+
+                    <!-- Block Button -->
+                    @if (account.status !== 'BLOCKED' && account.status !== 'CLOSED') {
+                      <button 
+                        (click)="updateAccountStatus(account, 'BLOCKED')" 
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.71 15.29c-.39.39-1.02.39-1.41 0a.996.996 0 010-1.41L10.59 12 8.88 10.29a.996.996 0 111.41-1.41L12 10.59l1.71-1.71a.996.996 0 111.41 1.41L13.41 12l1.71 1.71a.996.996 0 11-1.41 1.41L12 13.41l-1.71 1.71z"/>
+                        </svg>
+                        Block
+                      </button>
+                    }
+                    
+                    <!-- Close Button -->
+                    @if (account.status !== 'CLOSED') {
+                      <button 
+                        (click)="updateAccountStatus(account, 'CLOSED')" 
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 12v-2h-3V6h-2v4h-2V6H9v4H7v2h2v4h2v-4h2v4h2v-4h3zM5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Close
+                      </button>
+                    }
                   </div>
                 </td>
+                
               </tr>
             } @empty {
               <tr>
@@ -113,8 +160,8 @@
                   <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                   </svg>
-                  <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No customers found</h3>
-                  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding your first customer.</p>
+                  <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No accounts found</h3>
+                  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding your first account.</p>
                 </td>
               </tr>
             }
@@ -140,7 +187,7 @@
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Loading</h3>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Please wait while we fetch the customers...</p>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Please wait while we fetch the accounts...</p>
         </div>
       }
     </div>

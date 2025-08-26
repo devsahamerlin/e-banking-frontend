@@ -10,4 +10,7 @@ export interface UserProfile {
   scopes?: string;
   accessToken?: string;
   refreshToken?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  lastLogin?: string;
 }

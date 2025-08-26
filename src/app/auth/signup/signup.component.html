@@ -1,1 +1,140 @@
-<p>signup works!</p>
+<div class="min h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-6">
+  <div class="w-full max-w-md">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white text-center">Sign Up</h2>
+      </div>
+        
+      <div class="p-6">
+        <form [formGroup]="signupFormGroup" (ngSubmit)="handleSignup()">
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Email :
+              </label>
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="Enter user email"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+              @if (signupFormGroup.get('email')?.touched && 
+                   signupFormGroup.get('email')?.errors?.['email']) {
+                <span class="text-red-500 text-sm mt-1 block flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  email is not valid
+                </span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                First Name :
+              </label>
+              <input
+                type="text"
+                formControlName="firstName"
+                placeholder="Enter user firstName"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+              @if (signupFormGroup.get('firstName')?.touched && 
+                   signupFormGroup.get('firstName')?.errors?.['firstName']) {
+                <span class="text-red-500 text-sm mt-1 block flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  First Name is not valid
+                </span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Last Name :
+              </label>
+              <input
+                type="text"
+                formControlName="lastName"
+                placeholder="Enter user lastName"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+              @if (signupFormGroup.get('lastName')?.touched && 
+                   signupFormGroup.get('lastName')?.errors?.['lastName']) {
+                <span class="text-red-500 text-sm mt-1 block flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Last Name is not valid
+                </span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Username :
+              </label>
+              <input
+                type="text"
+                formControlName="username"
+                placeholder="Enter customer username"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+              @if (signupFormGroup.get('username')?.touched && 
+                   signupFormGroup.get('username')?.errors?.['username']) {
+                <span class="text-red-500 text-sm mt-1 block flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Username is not valid
+                </span>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Password :
+              </label>
+              <input
+                type="text"
+                formControlName="password"
+                placeholder="Enter customer password"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+              @if (signupFormGroup.get('password')?.touched && 
+                   signupFormGroup.get('password')?.errors?.['required']) {
+                <span class="text-red-500 text-sm mt-1 block flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Password is required
+                </span>
+              }
+            </div>
+            <button
+              type="submit"
+              [disabled]="!signupFormGroup.valid || isLoading"
+              class="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+              @if (isLoading) {
+                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              } @else {
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              }
+              <span>Register</span>
+            </button>
+          </div>
+        </form>
+        <br>
+        <div class="text-center">
+          <p class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Already have an account with us yet?</p>
+          <button
+            type="button"
+            (click)="navigateToSignin()"
+            class="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold text-sm transition-colors group">
+            <span>Sign In</span>
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

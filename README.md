@@ -7,6 +7,10 @@ Backend: https://github.com/devsahamerlin/e-banking-backend
 
 ![app](images/app.gif)
 
+## Admin account status management
+
+![admin](images/account-admin.gif)
+
 ## Rendu IHM Operations sur un compte
 
 ![account-search-form](images/account-search-form.png)

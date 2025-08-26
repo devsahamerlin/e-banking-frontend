@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Customer } from '../../common/models/customer.model';
 import { CustomersService } from '../../services/customers.service';
 import { CommonModule } from '@angular/common';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 @Component({
   selector: 'app-new-customer',
@@ -14,7 +15,12 @@ import { CommonModule } from '@angular/common';
 export class NewCustomerComponent implements OnInit{
   isLoading: boolean = false;
   newCustomerFormGroup! : FormGroup;
-  constructor(private fb : FormBuilder, private customerService:CustomersService, private router:Router) { }
+  constructor(
+    private fb : FormBuilder, 
+    private customerService:CustomersService, 
+    private router:Router,
+    private snackBar: SnackBarService
+  ) { }
 
   ngOnInit(): void {
     this.newCustomerFormGroup=this.fb.group({
@@ -27,7 +33,7 @@ export class NewCustomerComponent implements OnInit{
     let customer:Customer=this.newCustomerFormGroup.value;
     this.customerService.saveCustomer(customer).subscribe({
       next : data=>{
-        alert("Customer has been successfully saved!");
+        this.snackBar.openSnackBar("Customer has been successfully saved!");
         this.newCustomerFormGroup.reset();
         this.router.navigateByUrl("/customers");
       },

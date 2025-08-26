@@ -31,7 +31,6 @@ export class CustomerListComponent {
   }
 
    allCustomers() {
-    let kw=this.searchFormGroup?.value.keyword;
     this.customers=this.customerService.getCustomers().pipe(
       catchError(err => {
         this.errorMessage=err.message;
