@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
+  showPassword = false;
   isLoading: boolean = false;
   loginFormGroup! : FormGroup;
   constructor(private fb : FormBuilder, private authService:AuthService, private router:Router,
@@ -46,6 +47,15 @@ export class LoginComponent {
         console.log(err);
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+
+  navigateToSignup(): void {
+    this.router.navigateByUrl('/auth/signup');
   }
 
 }

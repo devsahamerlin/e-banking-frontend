@@ -17,18 +17,36 @@ export class AuthService {
   accessToken: string = '';
   userProfile: UserProfile = {};
 
+  options = {
+    headers: new HttpHeaders().set('Content-Type', 'application/json')
+  };
+
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   public login(username: string, password: string) {
+    const payload = { username, password };
 
-    const options = {
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-    };
+    return this.httpClient.post(environment.backendHost+'/auth/login', payload, this.options);
+  }
 
-    const params = new HttpParams()
-    .set('username', username).set('password', password);
+  public refreshToken() {
+    const token = this.accessToken
+      || (this.userProfile && (this.userProfile as any).accessToken)
+      || (() => {
+        const stored = localStorage.getItem('user');
+        if (!stored) return '';
+        try { return JSON.parse(stored).accessToken || ''; } catch { return ''; }
+      })();
 
-    return this.httpClient.post(environment.backendHost+'/auth/login', params, options);
+    const headers = this.options.headers.set('Authorization', `Bearer ${token}`);
+    return this.httpClient.post(environment.backendHost + '/auth/refresh', {}, { headers });
+  }
+
+  
+
+  public signup(userDetails: {email: string, username: string, firstName: string, lastName: string, password: string}) {
+
+    return this.httpClient.post(environment.backendHost+'/auth/register', userDetails, this.options);
   }
 
   laodUserProfile(data: any) {

@@ -89,7 +89,7 @@
                 </span>
               }
             </div>
-
+          @if (accountId) {
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Account Status :
@@ -98,10 +98,9 @@
                 formControlName="status"
                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <option value="">Select account status</option>
-                <option value="CREATED">Created</option>
                 <option value="ACTIVATED">Activated</option>
                 <option value="SUSPENDED">Suspended</option>
-                <option value="CLOSED">Closed</option>
+                <option value="BLOCKED">Blocked</option>
               </select>
               @if (newAccountFormGroup.get('status')?.touched && 
                    newAccountFormGroup.get('status')?.errors?.['required']) {
@@ -113,8 +112,9 @@
                 </span>
               }
             </div>
+          }
 
-            @if (newAccountFormGroup.get('type')?.value === 'CURRENT') {
+            @if (newAccountFormGroup.get('accountType')?.value === 'CURRENT') {
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Overdraft Limit :
@@ -147,7 +147,7 @@
               </div>
             }
 
-            @if (newAccountFormGroup.get('type')?.value === 'SAVING') {
+            @if (newAccountFormGroup.get('accountType')?.value === 'SAVING') {
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Interest Rate (%) :

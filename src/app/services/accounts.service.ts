@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import { environment } from '../../environments/environment';
-import { AccountDetails } from '../common/models/account.model';
+import { Account, AccountDetails } from '../common/models/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +35,25 @@ export class AccountsService {
     return this.http.post(environment.backendHost+"/accounts/transfer",data,this.getHttpOptions());
   }
 
-  createAccount(formData: any) {
-    let data={formData }
-    return this.http.post(environment.backendHost+"/accounts",data,this.getHttpOptions());
+  createAccount(account: any):Observable<Account> {
+    console.log(account);
+    return this.http.post<Account>(environment.backendHost+"/admin/accounts",account,this.getHttpOptions());
+  }
+
+  updateAccountStatus(accountId: string, status: string) {
+   return this.http.post(environment.backendHost+`/admin/accounts/${accountId}/status/${status}`,this.getHttpOptions());
+  }
+
+  getUserOperations(userId: string) {
+    return this.http.get(environment.backendHost+`/admin/users/${userId}/operations`,this.getHttpOptions());
+  }
+  
+
+  getAccounts():Observable<Array<Account>>{
+    return this.http.get<Array<Account>>(environment.backendHost+"/admin/accounts")
+  }
+
+   searchAccounts(keyword : string):Observable<Array<Account>>{
+    return this.http.get<Array<Account>>(environment.backendHost+"/admin/accounts/search?keyword="+keyword);
   }
 }

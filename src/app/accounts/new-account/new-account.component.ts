@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } 
 import { AccountsService } from '../../services/accounts.service';
 import { SnackBarService } from '../../services/snack-bar.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-account',
@@ -13,24 +14,26 @@ import { CommonModule } from '@angular/common';
 export class NewAccountComponent {
   newAccountFormGroup: FormGroup;
   isLoading = false;
+  accountId: string = '';
 
-  constructor(private fb: FormBuilder, private accountService : AccountsService,
+  constructor(private fb: FormBuilder, 
+      private accountService : AccountsService,
+      private router:Router,
       private snackBar: SnackBarService) {
 
     this.newAccountFormGroup = this.fb.group({
       customerId: ['', Validators.required],
-      type: ['CURRENT', Validators.required],
-      balance: [0, [Validators.required, Validators.min(0)]],
-      status: ['CREATED', Validators.required],
+      accountType: ['CURRENT', Validators.required],
+      initialBalance: [0, [Validators.required, Validators.min(0)]],
       overdraft: [0, [Validators.required, Validators.min(0)]],
       interestRate: [0, [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
-  setAccountType(type: 'CURRENT' | 'SAVING') {
-    this.newAccountFormGroup.patchValue({ type });
+  setAccountType(accountType: 'CURRENT' | 'SAVING') {
+    this.newAccountFormGroup.patchValue({ accountType });
     
-    if (type === 'CURRENT') {
+    if (accountType === 'CURRENT') {
       this.newAccountFormGroup.get('overdraft')?.setValidators([Validators.required, Validators.min(0)]);
       this.newAccountFormGroup.get('interestRate')?.clearValidators();
     } else {
@@ -42,9 +45,9 @@ export class NewAccountComponent {
     this.newAccountFormGroup.get('interestRate')?.updateValueAndValidity();
   }
 
-  getAccountTypeButtonClass(type: string): string {
-    const selectedType = this.newAccountFormGroup.get('type')?.value;
-    return selectedType === type 
+  getAccountTypeButtonClass(accountType: string): string {
+    const selectedType = this.newAccountFormGroup.get('accountType')?.value;
+    return selectedType === accountType 
       ? 'bg-blue-500 text-white border-blue-500' 
       : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600';
   }
@@ -54,17 +57,26 @@ export class NewAccountComponent {
       this.isLoading = true;
       const formData = this.newAccountFormGroup.value;
       
-      if (formData.type === 'CURRENT') {
+      if (formData.accountType === 'CURRENT') {
         delete formData.interestRate;
       } else {
         delete formData.overdraft;
       }
       
-      this.accountService.createAccount(formData).subscribe({
+      let account = {
+        initialBalance: formData.initialBalance,
+        customerId: formData.customerId,
+        accountType: formData.accountType,
+        overdraft: formData.overdraft,
+        interestRate: formData.interestRate
+      };
+
+      this.accountService.createAccount(account).subscribe({
         next : (data)=>{
           this.snackBar.openSnackBar("Account created successfully!");
           this.newAccountFormGroup.reset();
           this.isLoading = false;
+          this.router.navigateByUrl("/accounts/list");
         },
         error : (err)=>{
           this.snackBar.openSnackBar("Account creation failed: " + err.message);
