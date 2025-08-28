@@ -5,7 +5,18 @@ On souhaite créer une application qui permet de gérer des comptes bancaires. c
 
 Backend: https://github.com/devsahamerlin/e-banking-backend
 
+## Default admin :
+- username: admin@gmail.com
+- password: 12345678
+
+## Default Data:
+- Backend Automatically create initial Data including users, 3 customers, banque account, operations... 
+
+
 ![app](images/app.gif)
+
+## Admin dashboard
+![dashboard-overview](images/dashboard-operations-overview.gif)
 
 ## Admin account status management
 
@@ -56,6 +67,12 @@ This view is when customer click on `operations button` from specific customer a
 ![admin-operations](images/admin-operations.png)
 
 ![admin-menu](images/admin-menu.png)
+
+## Admin dashboard
+
+![Admin dashboard overview](images/dashboard-operations-overview.png)
+
+![Admin dashboard operations chart](images/dashboard-operations-chart.png)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 

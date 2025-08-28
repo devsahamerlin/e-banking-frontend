@@ -1,0 +1,507 @@
+<div class="bg-gray-50 dark:bg-gray-900 pt-16">
+  <!-- Header -->
+  <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="flex items-center justify-center w-10 h-10 bg-indigo-600 rounded-lg">
+            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Dashboard Bancaire</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Vue d'ensemble des indicateurs clés</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button (click)="refreshDashboard()" [disabled]="loading"
+            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors">
+            <svg *ngIf="!loading" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <svg *ngIf="loading" class="w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+            </svg>
+            {{ loading ? 'Actualisation...' : 'Actualiser' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content-->
+  <main class="mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 dark:border-gray-700">
+    <!-- Critical Alerts -->
+    <section *ngIf="alerts && alerts.length > 0" class="space-y-4">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+        <svg class="w-5 h-5 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd" />
+        </svg>
+        Alertes
+      </h2>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div *ngFor="let alert of alerts" class="rounded-lg border-l-4 p-4 shadow-sm bg-white dark:bg-gray-800"
+          [ngClass]="{
+               'border-red-500 bg-red-50 dark:bg-red-900/20': alert.severity === 'HIGH',
+               'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20': alert.severity === 'MEDIUM',
+               'border-green-500 bg-green-50 dark:bg-green-900/20': alert.severity === 'LOW'
+             }">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start space-x-3">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-5 h-5" [ngClass]="{
+                       'text-red-500': alert.severity === 'HIGH',
+                       'text-yellow-500': alert.severity === 'MEDIUM',
+                       'text-green-500': alert.severity === 'LOW'
+                     }" fill="currentColor" viewBox="0 0 20 20">
+                  <path *ngIf="alert.severity === 'HIGH'" fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+                  <path *ngIf="alert.severity === 'MEDIUM'" fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+                  <path *ngIf="alert.severity === 'LOW'" fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ alert.type }}</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">{{ alert.message }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ alert.actionRequired }}</p>
+              </div>
+            </div>
+            <div class="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400">
+              {{ alert.timestamp | date:'short' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI Cards - Layout -->
+    <section *ngIf="overview">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Indicateurs Clés</h2>
+
+      <div class="grid grid-cols-5 sm:grid-cols-5 lg:grid-cols-5 gap-3 mb-4">
+        <!-- Total Accounts -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Total Comptes</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.totalAccounts | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v8H4V6z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Total Clients</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.totalCustomers | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Users -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Total Utilisateurs</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.totalUsers | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Balance -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Solde Total</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ formatCurrency(overview.totalBalance) }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v8H4V6z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Transactions -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Transactions</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.totalTransactions | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Account Status -->
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+
+        <!-- Active Accounts -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Comptes Actifs</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.activeAccountsCount | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suspended Accounts -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Comptes Suspendus</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.suspendedAccountsCount | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blocked Accounts -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Comptes Bloqués</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.blockedAccounts | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Closed Accounts -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Comptes Fermés</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ overview.closedAccounts | number }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Financial Metrics (4 cards) -->
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+        <!-- Total Deposits -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Total Dépôts</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ formatCurrency(overview.totalDeposits) }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-teal-100 dark:bg-teal-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Withdrawals -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Total Retraits</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ formatCurrency(overview.totalWithdrawals) }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M16 17a1 1 0 01-1 1H4a1 1 0 110-2h11a1 1 0 011 1zM13.707 13.293a1 1 0 010 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L9 14.586V7a1 1 0 112 0v7.586l1.293-1.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Average Balance -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Solde Moyen</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ formatCurrency(overview.averageAccountBalance) }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Net Flow -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">Flux Net</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white"
+                [class.text-green-600]="(overview.totalDeposits - overview.totalWithdrawals) > 0"
+                [class.text-red-600]="(overview.totalDeposits - overview.totalWithdrawals) < 0">
+                {{ formatCurrency(overview.totalDeposits - overview.totalWithdrawals) }}
+              </p>
+            </div>
+            <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center ml-2">
+              <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 010 2h-1v1a1 1 0 01-2 0V4h-1a1 1 0 110-2h1V1a1 1 0 012 0v1h1z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- New Card End -->
+
+
+    <!-- Charts Section -->
+    <section>
+
+      <!-- Monthly Evolution Chart -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Évolution Mensuelle</h3>
+          <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Flux nets</span>
+          </div>
+        </div>
+        <div class="h-80 relative">
+          <!-- Chart Container -->
+          <div *ngIf="monthlyChartData && hasMonthlyData; else noMonthlyData" class="w-full h-full">
+            <canvas baseChart [data]="monthlyChartData" [options]="monthlyChartOptions" [type]="'line'"
+              class="w-full h-full">
+            </canvas>
+          </div>
+
+          <!-- No Data State -->
+          <ng-template #noMonthlyData>
+            <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+              <div class="text-center">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <p class="text-sm font-medium">Aucune donnée disponible</p>
+                <p class="text-xs mt-1">Les données mensuelles s'afficheront ici</p>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+    </section>
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Account Types Distribution -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Types de Comptes</h3>
+          <span class="text-xs text-gray-500 dark:text-gray-400">Répartition par solde</span>
+        </div>
+        <div class="h-80 relative">
+          <!-- Pie Chart Container -->
+          <div *ngIf="accountTypePieData && hasAccountTypeData; else noAccountData"
+            class="flex items-center justify-center h-full">
+            <div class="w-64 h-64">
+              <canvas baseChart [data]="accountTypePieData" [options]="pieChartOptions" [type]="'doughnut'"
+                class="w-full h-full">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- No Data State -->
+          <ng-template #noAccountData>
+            <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+              <div class="text-center">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                <p class="text-sm font-medium">Aucune donnée disponible</p>
+                <p class="text-xs mt-1">La répartition des comptes s'affichera ici</p>
+              </div>
+            </div>
+          </ng-template>
+
+          <!-- Legend for Account Types -->
+          <div *ngIf="accountTypePieData && hasAccountTypeData" class="absolute bottom-0 left-0 right-0">
+            <div class="flex justify-center space-x-4 text-xs">
+              <div *ngFor="let item of accountTypes; let i = index" class="flex items-center space-x-1">
+                <div class="w-3 h-3 rounded-full" [style.background-color]="getAccountTypeColor(i)"></div>
+                <span class="text-gray-600 dark:text-gray-400">
+                  {{ getAccountTypeLabel(item.accountType) }} ({{ item.percentage }}%)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operations Types Distribution -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Types d'opérations</h3>
+          <span class="text-xs text-gray-500 dark:text-gray-400">Répartition par montant de Transactions</span>
+        </div>
+        <div class="h-80 relative">
+          <!-- Pie Chart Container -->
+          <div *ngIf="operationsTypePieData && hasOperationsTypeData; else noOperationData"
+            class="flex items-center justify-center h-full">
+            <div class="w-64 h-64">
+              <canvas baseChart [data]="operationsTypePieData" [options]="operationsPieChartOptions" [type]="'doughnut'"
+                class="w-full h-full">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- No Data State -->
+          <ng-template #noOperationData>
+            <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+              <div class="text-center">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                <p class="text-sm font-medium">Aucune donnée disponible</p>
+                <p class="text-xs mt-1">La répartition des comptes s'affichera ici</p>
+              </div>
+            </div>
+          </ng-template>
+
+          <!-- Legend for Account Types -->
+          <div *ngIf="operationsTypePieData && hasOperationsTypeData" class="absolute bottom-0 left-0 right-0">
+            <div class="flex justify-center space-x-4 text-xs">
+              <div *ngFor="let item of operationTypes; let i = index" class="flex items-center space-x-1">
+                <div class="w-3 h-3 rounded-full" [style.background-color]="getAccountTypeColor(i)"></div>
+                <span class="text-gray-600 dark:text-gray-400">
+                  {{ getAccountTypeLabel(item.type) }} ({{ item.percentage }}%)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
+          </svg>
+          <div>
+            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">Erreur de chargement</h4>
+            <p class="text-sm text-red-700 dark:text-red-300">{{ error }}</p>
+          </div>
+        </div>
+        <button (click)="loadDashboardData()"
+          class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+          Réessayer
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="loading"
+    class="fixed inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="flex flex-col items-center space-y-4">
+      <svg class="w-12 h-12 text-indigo-600 animate-spin" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+      </svg>
+      <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Chargement des données...</p>
+    </div>
+  </div>
+</div>
