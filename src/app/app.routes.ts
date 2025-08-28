@@ -10,7 +10,12 @@ export const routes: Routes = [
       pathMatch: 'full',
       redirectTo: '/',
     },
-    { path: 'dashboard', component: HomeComponent, canActivate: [authenticationGuard] },
+    { path: 'home', component: HomeComponent, canActivate: [authenticationGuard] },
+    {
+      path: 'dashboard', canActivate: [authenticationGuard],
+      loadChildren: () =>
+        import('./dashboard/dashboard-routing.module').then((module) => module.DashboardRoutingModule),
+    },
     {
       path: 'accounts', canActivate: [authenticationGuard],
       loadChildren: () =>
